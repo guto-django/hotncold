@@ -5,5 +5,5 @@ scale.
 Using an arrow for direction.
 
 Developed:
-	- Guto
-	- Django
+- Guto
+- Django
