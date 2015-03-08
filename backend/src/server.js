@@ -36,6 +36,6 @@ http.createServer(function(req,res){
 
 }).listen(1337,servip)
 
-console.log("Listenning port 1337 at "+servip)
+console.log("\n\nListenning port 1337 at "+servip+"\n\n")
 
 

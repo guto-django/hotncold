@@ -19,6 +19,7 @@ var services = require('./services')
 function send_error(res){
 		res.writeHead(404, {'Content-Type': 'text/plain'})
 		res.end("Malformed request request verb=h for help")
+		console.log("Error with verb\n\n")
 }
 
 
@@ -32,7 +33,7 @@ var verbs = {
 			res.writeHead(200, {'Content-Type': 'text/plain'})
 			res.write("Help Menu:\n\nVerbs:\n")
 			res.write("\n\th -> This help message\n")
-			res.write("\n\tr -> register\n\t\t parameters:\n\t\t\tuser: username\n\t\t\tid: unique id\n")
+			res.write("\n\tr -> register\n\t\t parameters:\n\t\t\tuser: username\n\t\t\tcoord: send long parameter and lat\n\n")
 			res.write("\n\tl -> list users, no more parameters, gets users and id's\n")
 			res.write("\n\tg -> get info\n\t\tparameters:\n\t\t\tid: id of a given user\n")
 			res.write("\n\tp -> push coordinates to server\n\t\tparameters:\n\t\t\tid: unique id\n\t\t\tlong and lat\n")
@@ -40,10 +41,19 @@ var verbs = {
 			res.end()
 		},
 	'r':function(query,res){
-			if(Object.keys(query).length == 3 && 'id' in query && 'user' in query)
-					services['r'](query['id'],query['user'],res)
+			if(Object.keys(query).length >= 2  && 'user' in query){
+					if(Object.keys(query).length == 2)
+						services['r']({'long':0,'lat':0},decodeURI(query['user']),res)
+					else
+						if(Object.keys(query).length == 4 && 'long' in query && 'lat' in query)
+							services['r']({'long':query['long'],'lat':query['lat']},query['user'],res)
+						else
+							send_error(res)
+				
+			}
 			else
 				send_error(res)
+
 		},
 	'l':function(query,res){
 			if(Object.keys(query).length == 1)
